@@ -33,7 +33,7 @@ for file in files:
         for line in my_file:
             ind += 1
             ip_match = re.search(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", line)
-            url_match = re.search(r"\"http://[0-9a-z./-]+\"", line)
+            url_match = re.search(r"\"http://[0-9a-zA-Z./&?=_-]+\"", line)
             if url_match:
                 url = url_match.group(0)[1:-1]
             else:

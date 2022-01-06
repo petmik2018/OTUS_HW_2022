@@ -33,11 +33,13 @@ for file in files:
         for line in my_file:
             ind += 1
             ip_match = re.search(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", line)
-            url_match = re.search(r"\"http://[0-9a-zA-Z./&?=_-]+\"", line)
-            if url_match:
-                url = url_match.group(0)[1:-1]
-            else:
-                url = "-"
+            # url_match = re.search(r"\"http://[0-9a-zA-Z./&?=_-]+\"", line)
+            # if url_match:
+            #     url = url_match.group(0)[1:-1]
+            # else:
+            #     url = "-"
+            url_spl = line.split(" ")
+            url = url_spl[10]
             method_match = re.search(r"\] \"(POST|GET|PUT|DELETE|HEAD|OPTIONS)", line)
             date_time_match = re.search(r"\d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2}", line)
             if method_match is not None:

@@ -6,7 +6,6 @@ from subprocess import run
 
 users = {}
 proc_count = 0
-# result = run(["ps aux | grep python"], shell=True, capture_output=True)
 result = run(["ps aux"], shell=True, capture_output=True)
 my_stdout = result.stdout.decode("utf-8").split("\n")
 my_stdout.pop(len(my_stdout)-1)
@@ -31,12 +30,8 @@ for item in my_stdout:
         cpu_total += cpu
         mem = float(item[head+5:head+9])
         mem_total += mem
-        if cpu > cpu_max:
-            cpu_max = cpu
-            cpu_max_process_name = process_name[:20]
-        if mem > mem_max:
-            mem_max = mem
-            mem_max_process_name = process_name[:20]
+        if cpu > cpu_max: cpu_max, cpu_max_process_name = cpu, process_name[:20]
+        if mem > mem_max: mem_max, mem_max_process_name = mem, process_name[:20]
         try:
             users[user_name] += 1
         except KeyError:

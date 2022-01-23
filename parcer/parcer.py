@@ -11,24 +11,25 @@ my_stdout = result.stdout.decode("utf-8").split("\n")
 my_stdout.pop(len(my_stdout)-1)
 mem_total = 0.0
 cpu_total = 0.0
-mem_max = 0.0
-cpu_max = 0.0
+mem_max = -1.0
+cpu_max = -1.0
 mem_max_process_name = ''
 cpu_max_process_name = ''
+head = 0
 
 for item in my_stdout:
-    user_name = re.search(r"\S+\s", item)
-    user_name = user_name.group()
-    if user_name != "USER ":
-        proc_count += 1
-        time_str = re.search(r".+:[0-9][0-9]\s+[0-9]+:[0-9][0-9]\s", item)
+    spl_item = item.split()
+    user_name = spl_item[0]
+    if user_name == "USER":
+        time_str = re.search(r".+TIME\s", item)
         head = len(time_str.group())
         process_name = item[head:]
-        start_str = re.search(r"\S+\s+[0-9]+\s", item)
-        head = len(start_str.group())
-        cpu = float(item[head:head+4])
+    else:
+        proc_count += 1
+        process_name = item[head:]
+        cpu = float(spl_item[2])
         cpu_total += cpu
-        mem = float(item[head+5:head+9])
+        mem = float(spl_item[3])
         mem_total += mem
         if cpu > cpu_max: cpu_max, cpu_max_process_name = cpu, process_name[:20]
         if mem > mem_max: mem_max, mem_max_process_name = mem, process_name[:20]
@@ -45,8 +46,8 @@ for user in list(users.keys()):
 report += "\r\nProcesses per users: \r\n"
 for key, value in users.items():
     report += f"{key} : {value}\r\n"
-report += f"Mem in use: {mem_total}\r\n"
-report += f"CPU in use: {cpu_total}\r\n"
+report += f"Mem in use: {round(mem_total,2)}\r\n"
+report += f"CPU in use: {round(cpu_total,2)}\r\n"
 report += f"Max Mem process_name: {mem_max_process_name}\r\n"
 report += f"Max CPU in use: {cpu_max_process_name}\r\n"
 print(report)
